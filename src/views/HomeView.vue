@@ -1,8 +1,8 @@
 <script setup>
+import PokemonList from '../components/PokemonList.vue';
+
 </script>
 
 <template>
-  <div class="about">
-    <h1>Hello World!</h1>
-  </div>
+  <PokemonList></PokemonList>
 </template>
