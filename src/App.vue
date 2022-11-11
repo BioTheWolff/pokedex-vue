@@ -1,82 +1,134 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+function toggle_nav() {
+  let t = document.getElementById('nav-toggle');
+  let nav = document.getElementById('site-nav');
+
+  if (t.classList.contains('active')) {
+    // close the nav
+    nav.classList.remove('show');
+    t.classList.remove('active');
+  } else {
+    // open the nav
+    nav.classList.add('show');
+    t.classList.add('active');
+  }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
+  <header id="site-header">
+    <div>
+      <h1>Pokedex</h1>
+    </div>
+    <div class="nav-wrapper">
+      <nav id="site-nav">
+        <RouterLink to="/">Homepage</RouterLink>
       </nav>
+      <i class="hamburger" id="nav-toggle" @click="toggle_nav()"></i>
     </div>
   </header>
 
-  <RouterView />
+  <main id="site-container">
+    <div class="filler"></div>
+    <div class="filler right"></div>
+
+    <div id="content-wrapper">
+        <!-- Page title -->
+        <h1>{{ $route.name }}</h1>
+        <div id="site-content" class="pokemon-list">
+          <!-- START of page content -->
+          <RouterView />
+          <!-- END of page content -->
+        </div>
+    </div>
+  </main>
+
+  <footer id="site-footer">
+    <div>&copy; 2022 - Polytech Montpellier</div>
+  </footer>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<style scoped lang="sass">
+#site-header
+  height: 10vh
+  background-color: $bg-accent
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+  display: flex
+  justify-content: space-between
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+  padding: 0 5vw
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+  h1
+    line-height: $header-height
+    margin: 0
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+  .nav-wrapper
+    line-height: $header-height
 
-nav a:first-of-type {
-  border: 0;
-}
+    .hamburger
+      @include for-desktop-and-up
+        display: none
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+    nav
+      @include for-up-to-tablet
+        &.show
+          transform: none
+          transition: transform .45s ease-in-out
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+        display: flex
+        flex-direction: column
+        padding-left: 3em
+        position: absolute
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+        transform: translateX(-110%)
+        transition: transform .45s ease-in-out
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+        top: $header-height
+        left: 0px
+        width: 70vw
+        height: calc(100vh - $header-height)
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+        background: $bg-card
+        box-shadow: 10px 4px 16px -5px rgba(0,0,0,0.63)
+
+
+      a:not(:last-of-type)
+          margin-right: 1.5em
+
+#site-footer
+  height: $footer-height
+  background-color: $bg-accent
+  display: flex
+  justify-content: center
+  line-height: $footer-height
+
+
+#site-container
+  flex-grow: 1
+  display: flex
+
+  .filler
+    @include for-tablet-and-up
+      width: 10vw
+      &.right
+        order: 3
+
+  #content-wrapper
+    flex-grow: 1
+    margin: 5vh 0
+    max-width: 100vw
+
+    @include for-phone-only
+      margin-left: 8px
+      margin-right: 8px
+
+    h1
+      text-align: center
+      margin: 0 0 1em 0
+
+    #site-content
+      max-width: 100vw
 </style>
