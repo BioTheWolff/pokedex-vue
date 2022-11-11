@@ -1,0 +1,68 @@
+@import '_variables.sass'
+@import '_mixins.sass'
+
+
+html, body
+  margin: 0
+  padding: 0
+  background-color: $bg
+  color: $color
+  font-family: Arial, Helvetica, sans-serif
+  font-size: 18px
+  width: 100vw
+
+
+body, #app
+  min-height: 100vh
+  display: flex
+  flex-direction: column
+
+a
+  color: $link-color
+  text-decoration: none
+
+  &:visited, &:active
+    color: $link-color
+  
+  &:hover
+    text-decoration: underline
+    color: lighten($link-color, 10%)
+
+
+.hamburger
+  display: block
+  width: 200px
+  height: 120px
+  top: -15px
+  right: -60px
+  position: absolute
+  margin: 0 20px
+
+  transform: scale(0.25)
+
+  &::before, &::after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 20px
+    color: #333
+    background-color: currentColor
+    transition: all .35s ease-in-out
+
+  &::before
+    top: 0
+    transform: rotate(0)
+
+  &::after
+    bottom: 0
+    box-shadow: 0 -50px currentColor
+
+  &.active
+    &::before
+      top: 50px
+      transform: rotate(45deg)
+
+    &::after
+      box-shadow: 0 0 transparent
+      bottom: 50px
+      transform: rotate(-45deg)
