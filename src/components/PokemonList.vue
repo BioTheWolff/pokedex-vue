@@ -19,11 +19,21 @@ watchEffect(async () => {
 </script>
 
 <template>
-    <PokemonTile 
-        v-for="(pokemon, index) in pokemons"
-        :key="index"
-        :id="index + 1"
-        :name="pokemon.name"
-        :url="pokemon.url"
-    ></PokemonTile>
+    <div class="pokemon-list">
+        <PokemonTile 
+            v-for="(pokemon, index) in pokemons"
+            :key="index"
+            :id="index + 1"
+            :name="pokemon.name"
+            :url="pokemon.url"
+        ></PokemonTile>
+    </div>
 </template>
+
+<style scoped lang="sass">
+.pokemon-list
+    display: flex
+    gap: 2em
+    flex-wrap: wrap
+    justify-content: space-evenly
+</style>

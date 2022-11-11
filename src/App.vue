@@ -37,7 +37,7 @@ function toggle_nav() {
     <div id="content-wrapper">
         <!-- Page title -->
         <h1>{{ $route.name }}</h1>
-        <div id="site-content" class="pokemon-list">
+        <div id="site-content">
           <!-- START of page content -->
           <RouterView />
           <!-- END of page content -->
