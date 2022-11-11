@@ -12,8 +12,8 @@ let page = ref(0);
 let pokemons = ref([]);
 
 watchEffect(async () => {
-    let pokemons_list = await pokedex.getPokemonsList();
-    pokemons.value = pokemons_list.results;
+    let pokemons_list = await pokedex.getPokemonSpeciesList();
+    pokemons.value = await pokemons_list.results;
 })
 
 </script>
@@ -22,6 +22,7 @@ watchEffect(async () => {
     <PokemonTile 
         v-for="(pokemon, index) in pokemons"
         :key="index"
+        :id="index + 1"
         :name="pokemon.name"
         :url="pokemon.url"
     ></PokemonTile>
