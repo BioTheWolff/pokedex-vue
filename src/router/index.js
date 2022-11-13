@@ -7,8 +7,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Pokemons List',
       component: HomeView
+    },
+    {
+      path: '/pokemon/:name',
+      component: () => import('../views/DetailsView.vue')
     },
     {
       path: '/:pathMatch(.*)*',

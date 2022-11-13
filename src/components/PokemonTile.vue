@@ -1,17 +1,24 @@
 <script setup>
-defineProps({
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const props = defineProps({
     id: Number,
     name: String,
     url: String,
-})
+});
 
 function getImageUrl(id) {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 }
+
+function goToDetails() {
+    router.push({path: `/pokemon/${props.name}`})
+}
 </script>
 
 <template>
-    <div class="pokecard">
+    <div class="pokecard" @click="goToDetails()">
         <div>
             <img :src="getImageUrl(id)">
         </div>
@@ -22,6 +29,7 @@ function getImageUrl(id) {
 
 <style scoped lang="sass">
 .pokecard
+    cursor: pointer
     width: fit-content
     padding: .5em
 
