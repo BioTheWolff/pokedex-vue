@@ -7,7 +7,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: HomeView
+      component: HomeView,
+      alias: [ '/list/:page' ]
     },
     {
       path: '/pokemon/:name',

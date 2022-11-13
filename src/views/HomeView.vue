@@ -6,6 +6,13 @@ import PokemonList from '../components/PokemonList.vue';
 <template>
   <h1>Pokemons List</h1>
   <div id="site-content">
-    <PokemonList></PokemonList>
+  
+    <Suspense>
+      <PokemonList></PokemonList>
+      <template #fallback>
+        Loading...
+      </template>
+    </Suspense>
+
   </div>
 </template>

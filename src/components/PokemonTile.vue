@@ -3,13 +3,16 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const props = defineProps({
-    id: Number,
     name: String,
     url: String,
 });
 
-function getImageUrl(id) {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+function getPokemonId() {
+    return Number(props.url.match(/([0-9]+)/g)[1])
+}
+
+function getImageUrl() {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getPokemonId()}.png`;
 }
 
 function goToDetails() {
@@ -20,9 +23,9 @@ function goToDetails() {
 <template>
     <div class="pokecard" @click="goToDetails()">
         <div>
-            <img :src="getImageUrl(id)">
+            <img :src="getImageUrl()">
         </div>
-        <div class="id">#{{ id }}</div>
+        <div class="id">#{{ getPokemonId() }}</div>
         <div class="name">{{ name }}</div>
     </div>
 </template>
