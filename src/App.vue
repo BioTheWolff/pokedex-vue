@@ -35,13 +35,7 @@ function toggle_nav() {
     <div class="filler right"></div>
 
     <div id="content-wrapper">
-        <!-- Page title -->
-        <h1>{{ $route.name }}</h1>
-        <div id="site-content">
-          <!-- START of page content -->
-          <RouterView />
-          <!-- END of page content -->
-        </div>
+      <RouterView />
     </div>
   </main>
 
