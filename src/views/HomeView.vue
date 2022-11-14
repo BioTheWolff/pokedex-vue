@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PokemonList from '../components/PokemonList.vue';
 
@@ -7,20 +7,48 @@ const router = useRouter();
 const route = useRoute();
 
 
+let title = ref("Pokemons List");
 let page = ref(0);
 let nb_per_page = 50;
 
 let search_page = ref(0);
-let is_searching = ref(false);
+let is_searching = ref(route.name === 'search');
 
 // this one is updated manually so the child doesn't filter on every key input
-let const_search_term = ref("");
-let search_term = ref("");
+let const_search_term = ref(route.params.search ?? "");
+let search_term = ref(route.params.search ?? "");
+
+setPageValue();
 
 
-// use the page number from the route if it exists
-if (route.params.page && Number(route.params.page) >= 1) {
-  page.value = Number(route.params.page)-1;
+// we define the watcher for future route changes
+// (in case the user decides to go back in their history)
+watch(() => route.fullPath, () => {
+  page.value = 0;
+
+  search_page.value = 0;
+  is_searching.value = route.name === 'search';
+
+  const_search_term.value = route.params.search ?? "";
+  search_term.value = route.params.search ?? "";
+
+  setPageValue();
+})
+
+
+function setPageValue() {
+  // this the "list" case - won't trigger if we arrive from "search" route
+  // use the page number from the route if it exists
+  if (route.params.page && Number(route.params.page) >= 1) {
+    page.value = Number(route.params.page)-1;
+  }
+
+  // this is the "search" route case
+  if (route.query.page && Number(route.query.page) >= 1) {
+    search_page.value = Number(route.query.page)-1;
+  }
+
+  title.value = is_searching.value ? "Pokemons Search" : "Pokemons List";
 }
 
 
@@ -43,8 +71,13 @@ function handlePageChange(val) {
 
 function goToFirstPage() {
   // replace the path so the user will not go back into the faulty page number
-  page.value = 0;
-  router.replace({ name: 'list' });
+  if (is_searching.value) {
+    search_page.value = 0;
+    handlePageChange(0);
+  } else {
+    page.value = 0;
+    handlePageChange(0);
+  }
 }
 
 function search() {
@@ -62,7 +95,7 @@ function search() {
 </script>
 
 <template>
-  <h1>Pokemons List</h1>
+  <h1>{{ title }}</h1>
   <div id="site-content">
 
     <div class="search-wrapper">

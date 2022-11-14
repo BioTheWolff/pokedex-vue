@@ -23,26 +23,30 @@ let pokemons = ref([]);
 let pokemons_list = await pokedex.getPokemonSpeciesList();
 pokemons.value = await pokemons_list.results;
 
+function getFilteredList() {
+    if (!props.isSearch) {
+        return pokemons.value;
+    }
+
+    let st = props.searchTerm.toLowerCase();
+
+    // filter the pokemons either on id or on name
+    return pokemons.value.filter((e) => {
+        return e.name.toLowerCase().includes(st) || (Number(st) && e.url.includes(st))
+    });
+}
+
 
 function getSlicedList() {
     let page_ = props.page;
     let nb = props.nbPerPage;
-    let p = pokemons.value;
-
-    if (props.isSearch) {
-        let st = props.searchTerm.toLowerCase();
-
-        // filter the pokemons either on id or on name
-        p = p.filter((e) => {
-            return e.name.toLowerCase().includes(st) || (Number(st) && e.url.includes(st))
-        });
-    }
+    let p = getFilteredList();
 
     return p.slice(page_*nb,(page_+1)*nb)
 }
 
 // check if page number is above the amount of data we have
-if (props.page*props.nbPerPage >= pokemons.value.length) {
+if (props.page*props.nbPerPage >= getFilteredList().length) {
     emits('outOfBounds')
 }
 </script>
