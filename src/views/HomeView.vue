@@ -10,6 +10,14 @@ const route = useRoute();
 let page = ref(0);
 let nb_per_page = 50;
 
+let search_page = ref(0);
+let is_searching = ref(false);
+
+// this one is updated manually so the child doesn't filter on every key input
+let const_search_term = ref("");
+let search_term = ref("");
+
+
 // use the page number from the route if it exists
 if (route.params.page && Number(route.params.page) >= 1) {
   page.value = Number(route.params.page)-1;
@@ -28,9 +36,14 @@ function goToFirstPage() {
   router.replace({ path: `/list/1` });
 }
 
-let search_term = ref("");
 function search() {
-
+  if (search_term.value.trim().length > 0) {
+    search_page.value = 0;
+    is_searching.value = true;
+    const_search_term.value = search_term.value;
+  } else {
+    is_searching.value = false;
+  }
 }
 </script>
 
@@ -56,8 +69,10 @@ function search() {
       <PokemonList 
         @chg-page="handlePageChange"
         @out-of-bounds="goToFirstPage"
-        :page="page"
-        :nb_per_page="nb_per_page"
+        :page="is_searching ? search_page : page"
+        :nbPerPage="nb_per_page"
+        :isSearch="is_searching"
+        :searchTerm="const_search_term"
       ></PokemonList>
 
       <template #fallback>

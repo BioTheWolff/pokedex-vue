@@ -6,7 +6,10 @@ import PokemonTile from './PokemonTile.vue';
 const emits = defineEmits(['chgPage', 'outOfBounds'])
 const props = defineProps({
     page: Number,
-    nb_per_page: Number,
+    nbPerPage: Number,
+
+    isSearch: Boolean,
+    searchTerm: String,
 })
 
 
@@ -23,14 +26,23 @@ pokemons.value = await pokemons_list.results;
 
 function getSlicedList() {
     let page_ = props.page;
-    let nb = props.nb_per_page;
+    let nb = props.nbPerPage;
     let p = pokemons.value;
+
+    if (props.isSearch) {
+        let st = props.searchTerm.toLowerCase();
+
+        // filter the pokemons either on id or on name
+        p = p.filter((e) => {
+            return e.name.toLowerCase().includes(st) || (Number(st) && e.url.includes(st))
+        });
+    }
 
     return p.slice(page_*nb,(page_+1)*nb)
 }
 
 // check if page number is above the amount of data we have
-if (props.page*props.nb_per_page >= pokemons.value.length) {
+if (props.page*props.nbPerPage >= pokemons.value.length) {
     emits('outOfBounds')
 }
 </script>
@@ -38,7 +50,7 @@ if (props.page*props.nb_per_page >= pokemons.value.length) {
 <template>
     <div class="pagination">
           <button @click="this.$emit('chgPage', -1)" v-visible="page > 0">Previous page</button>
-          <button @click="this.$emit('chgPage', 1)" v-visible="getSlicedList().length === nb_per_page">Next page</button>
+          <button @click="this.$emit('chgPage', 1)" v-visible="getSlicedList().length === $props.nbPerPage">Next page</button>
       </div>
     <div class="pokemon-list">
         <PokemonTile 
