@@ -27,13 +27,13 @@ if (route.params.page && Number(route.params.page) >= 1) {
 function handlePageChange(val) {
   // push the path so it is added to the web history
   page.value += val;
-  router.push({ path: `/list/${page.value+1}` });
+  router.push({ name: 'list', params: { page: page.value+1 } });
 }
 
 function goToFirstPage() {
   // replace the path so the user will not go back into the faulty page number
   page.value = 0;
-  router.replace({ path: `/list/1` });
+  router.replace({ name: 'list' });
 }
 
 function search() {

@@ -11,10 +11,17 @@ const router = createRouter({
     },
     {
       path: '/list/:page*',
+      name: 'list',
+      component: HomeView
+    },
+    {
+      path: '/search/:search',
+      name: 'search',
       component: HomeView
     },
     {
       path: '/pokemon/:name',
+      name: 'details',
       component: () => import('../views/DetailsView.vue')
     },
     {

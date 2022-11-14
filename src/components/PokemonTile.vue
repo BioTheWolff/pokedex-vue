@@ -16,7 +16,7 @@ function getImageUrl() {
 }
 
 function goToDetails() {
-    router.push({path: `/pokemon/${props.name}`})
+    router.push({ name: 'details', params: { name: props.name } })
 }
 </script>
 
