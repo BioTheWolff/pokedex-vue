@@ -26,8 +26,19 @@ if (route.params.page && Number(route.params.page) >= 1) {
 
 function handlePageChange(val) {
   // push the path so it is added to the web history
-  page.value += val;
-  router.push({ name: 'list', params: { page: page.value+1 } });
+
+  if (is_searching.value) {
+    search_page.value += val;
+    router.push({ 
+      name: 'search', 
+      params: { search: const_search_term.value },
+      // only add the page as a ?page= if the value is not the first page
+      query: search_page.value>0 ? { page: search_page.value+1 } : {}
+    });
+  } else {
+    page.value += val;
+    router.push({ name: 'list', params: { page: page.value+1 } });
+  }
 }
 
 function goToFirstPage() {
@@ -41,8 +52,11 @@ function search() {
     search_page.value = 0;
     is_searching.value = true;
     const_search_term.value = search_term.value;
+    // we do this to update the URL accordingly, without affecting pagination
+    handlePageChange(0);
   } else {
     is_searching.value = false;
+    handlePageChange(0);
   }
 }
 </script>
