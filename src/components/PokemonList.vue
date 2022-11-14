@@ -1,42 +1,45 @@
 <script setup>
 import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import PokemonTile from './PokemonTile.vue';
 
-const router = useRouter();
-const route = useRoute();
+
+const emits = defineEmits(['chgPage', 'outOfBounds'])
+const props = defineProps({
+    page: Number,
+    nb_per_page: Number,
+})
+
+
 const pokedex = new Pokedex.Pokedex({
     protocol: 'https',
     cacheImages: true,
 });
 
-let page = ref(Number(route.params.page) ?? 0);
-let pokemons = ref([]);
-let nb_per_page = 50;
 
+let pokemons = ref([]);
 let pokemons_list = await pokedex.getPokemonSpeciesList();
 pokemons.value = await pokemons_list.results;
 
 
 function getSlicedList() {
-    let page_ = page.value;
-    let nb = nb_per_page;
+    let page_ = props.page;
+    let nb = props.nb_per_page;
     let p = pokemons.value;
 
     return p.slice(page_*nb,(page_+1)*nb)
 }
 
-function chgPage(mod) {
-    page.value += mod;
-    router.push({path: `/list/${page.value}`})
+// check if page number is above the amount of data we have
+if (props.page*props.nb_per_page >= pokemons.value.length) {
+    emits('outOfBounds')
 }
 </script>
 
 <template>
     <div class="pagination">
-        <button @click="chgPage(-1)" v-visible="page > 0">Previous page</button>
-        <button @click="chgPage(1)" v-visible="getSlicedList().length === nb_per_page">Next page</button>
-    </div>
+          <button @click="this.$emit('chgPage', -1)" v-visible="page > 0">Previous page</button>
+          <button @click="this.$emit('chgPage', 1)" v-visible="getSlicedList().length === nb_per_page">Next page</button>
+      </div>
     <div class="pokemon-list">
         <PokemonTile 
             v-for="(pokemon, index) in getSlicedList()"

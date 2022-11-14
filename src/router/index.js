@@ -7,8 +7,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: HomeView,
-      alias: [ '/list/:page' ]
+      redirect: '/list/'
+    },
+    {
+      path: '/list/:page*',
+      component: HomeView
     },
     {
       path: '/pokemon/:name',

@@ -1,10 +1,36 @@
 <script setup>
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import PokemonList from '../components/PokemonList.vue';
+
+const router = useRouter();
+const route = useRoute();
+
+
+let page = ref(0);
+let nb_per_page = 50;
+
+// use the page number from the route if it exists
+if (route.params.page && Number(route.params.page) >= 1) {
+  page.value = Number(route.params.page)-1;
+}
+
+
+function handlePageChange(val) {
+  // push the path so it is added to the web history
+  page.value += val;
+  router.push({ path: `/list/${page.value+1}` });
+}
+
+function goToFirstPage() {
+  // replace the path so the user will not go back into the faulty page number
+  page.value = 0;
+  router.replace({ path: `/list/1` });
+}
 
 let search_term = ref("");
 function search() {
-  
+
 }
 </script>
 
@@ -27,10 +53,17 @@ function search() {
     </div>
   
     <Suspense>
-      <PokemonList></PokemonList>
+      <PokemonList 
+        @chg-page="handlePageChange"
+        @out-of-bounds="goToFirstPage"
+        :page="page"
+        :nb_per_page="nb_per_page"
+      ></PokemonList>
+
       <template #fallback>
         Loading...
       </template>
+
     </Suspense>
 
   </div>
