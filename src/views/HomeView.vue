@@ -24,9 +24,6 @@ setPageValue();
 // we define the watcher for future route changes
 // (in case the user decides to go back in their history)
 watch(() => route.fullPath, () => {
-  page.value = 0;
-
-  search_page.value = 0;
   is_searching.value = route.name === 'search';
 
   const_search_term.value = route.params.search ?? "";
