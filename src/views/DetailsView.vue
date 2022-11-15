@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import ErrorCard from '@/components/_structure/ErrorCard.vue';
 import PokemonDetails from '@/components/PokemonDetails.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import LoadingSpinner from '@/components/detailing/LoadingSpinner.vue';
 
 let err = ref(false);
 

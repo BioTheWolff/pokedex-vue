@@ -46,6 +46,15 @@ function getSlicedList() {
     return p.slice(page_*nb,(page_+1)*nb)
 }
 
+// keep the tile key consistent with the search so as not to lose any optimisation
+function getTileKey(pokemon, index) {
+    if (props.isSearch) {
+        return Number(pokemon.url.match(/([0-9]+)/g)[1])
+    } else {
+        return props.page*props.nbPerPage + index
+    }
+}
+
 // check if page number is above the amount of data we have
 if (props.page*props.nbPerPage >= getFilteredList().length) {
     emits('outOfBounds')
@@ -60,7 +69,7 @@ if (props.page*props.nbPerPage >= getFilteredList().length) {
     <div class="pokemon-list">
         <PokemonTile 
             v-for="(pokemon, index) in getSlicedList()"
-            :key="index"
+            :key="getTileKey(pokemon, index)"
             :name="pokemon.name"
             :url="pokemon.url"
         ></PokemonTile>

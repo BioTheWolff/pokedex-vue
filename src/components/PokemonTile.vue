@@ -21,13 +21,13 @@ function goToDetails() {
 </script>
 
 <template>
-    <div class="pokecard" @click="goToDetails()">
+    <article class="pokecard" @click="goToDetails()">
         <div>
-            <img :src="getImageUrl()">
+            <img :src="getImageUrl()" :alt="name">
         </div>
         <div class="id">#{{ getPokemonId() }}</div>
         <div class="name">{{ name }}</div>
-    </div>
+    </article>
 </template>
 
 <style scoped lang="sass">
