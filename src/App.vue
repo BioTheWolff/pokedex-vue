@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import SiteTitle from '@/components/_structure/SiteTitle.vue'
 
 function toggle_nav() {
   let t = document.getElementById('nav-toggle');
@@ -19,9 +20,7 @@ function toggle_nav() {
 
 <template>
   <header id="site-header">
-    <div>
-      <h1>Pokedex</h1>
-    </div>
+    <SiteTitle></SiteTitle>
     <div class="nav-wrapper">
       <nav id="site-nav">
         <RouterLink to="/">Homepage</RouterLink>
