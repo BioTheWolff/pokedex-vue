@@ -15,7 +15,7 @@ function home(router) {
 </script>
 
 <template>
-    <div :class="(smaller ? 'smaller ' : '') + 'error-card'">
+    <div :class="`${smaller ? 'smaller ' : ''} error-card`">
         <h1 id="error-title">Error: {{ error === '404' ? "Not Found" : "Unknown" }}</h1>
         <div class="center error-description">
             <p v-if="error === '404'">
