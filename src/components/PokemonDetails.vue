@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue';
+
+const emits = defineEmits(['notFound'])
 const props = defineProps({
     name: String,
 })
@@ -10,15 +12,23 @@ const pokedex = new Pokedex.Pokedex({
 });
 
 
-let p = ref({});
-let pokemon_info = await pokedex.getPokemon(props.name);
-p.value = await pokemon_info;
+let p = ref(null);
+let s = ref(null);
 
-let s = ref({});
-// bug on the wrapper - trying to fetch one pokemon species fetches all of them
-// using the endpoint ourselves to fix this
-let req = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${props.name}`);
-s.value = await req.json();
+try {
+    p.value = await pokedex.getPokemon(props.name);
+
+    // bug on the wrapper - trying to fetch one pokemon species fetches all of them
+    // using the endpoint ourselves to fix this
+    let req = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${props.name}`);
+    if (req.status === 200) {
+        s.value = await req.json();
+    } else {
+        throw Error(`Request failed with status code ${req.status}`)
+    }
+} catch (e) {
+    emitNotFound(e);
+}
 
 
 function format(text) {
@@ -26,43 +36,49 @@ function format(text) {
     text = text.replace("-", " ");
     return text[0].toUpperCase() + text.substr(1);
 }
+
+function emitNotFound(err) {
+    emits('notFound', err);
+}
 </script>
 
 <template>
-    <h1>{{ format(p.name) }} (#{{ p.id }})</h1>
-    <div id="site-content" class="pokemon-details">
-        <div class="main">
-            <div v-if="s.is_legendary">(LEGENDARY)</div>
-            <div>
-                <img :src="p.sprites.other['official-artwork'].front_default">
-            </div>
-            <div>
-                <ul>
-                    <li v-for="typ in p.types">{{ format(typ.type.name) }}</li>
-                </ul>
-            </div>
-        </div>
-        <div class="info">
-            <div>
-                <section>
-                    <h3>Stats</h3>
+    <div v-if="p && s">
+        <h1>{{ format(p.name) }} (#{{ p.id }})</h1>
+        <div id="site-content" class="pokemon-details">
+            <div class="main">
+                <div v-if="s.is_legendary">(LEGENDARY)</div>
+                <div>
+                    <img :src="p.sprites.other['official-artwork'].front_default">
+                </div>
+                <div>
                     <ul>
-                        <li v-for="stat in p.stats">{{ format(stat.stat.name) }}: {{ stat.base_stat }}</li>
+                        <li v-for="typ in p.types">{{ format(typ.type.name) }}</li>
                     </ul>
-                </section>
+                </div>
             </div>
-            <div>
-                <section>
-                    <h3>Abilities</h3>
-                    <ul>
-                        <li v-for="ability in p.abilities.filter((e) => !e.is_hidden)">
-                            {{ format(ability.ability.name) }}
-                        </li>
-                    </ul>
-                </section>
-            </div>
-            <div>
-                
+            <div class="info">
+                <div>
+                    <section>
+                        <h3>Stats</h3>
+                        <ul>
+                            <li v-for="stat in p.stats">{{ format(stat.stat.name) }}: {{ stat.base_stat }}</li>
+                        </ul>
+                    </section>
+                </div>
+                <div>
+                    <section>
+                        <h3>Abilities</h3>
+                        <ul>
+                            <li v-for="ability in p.abilities.filter((e) => !e.is_hidden)">
+                                {{ format(ability.ability.name) }}
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+                <div>
+                    
+                </div>
             </div>
         </div>
     </div>

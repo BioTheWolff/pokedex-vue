@@ -31,6 +31,6 @@ import { SiteLogoFilled as logo } from "@/assets/img"
         justify-content: center
 
         img
-            height: 100px
-            width: 100px
+            height: 4em
+            width: 4em
 </style>

@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PokemonList from '../components/PokemonList.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -120,7 +121,7 @@ function search() {
       ></PokemonList>
 
       <template #fallback>
-        Loading...
+        <LoadingSpinner active text="Loading..."></LoadingSpinner>
       </template>
 
     </Suspense>
