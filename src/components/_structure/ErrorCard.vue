@@ -1,6 +1,7 @@
 <script setup>
 defineProps({
     error: String,
+    smaller: Boolean
 })
 
 
@@ -14,8 +15,8 @@ function home(router) {
 </script>
 
 <template>
-    <div class="error-card">
-        <h1 class="orange">Error: {{ error === '404' ? "Not Found" : "Unknown" }}</h1>
+    <div :class="(smaller ? 'smaller ' : '') + 'error-card'">
+        <h1 id="error-title">Error: {{ error === '404' ? "Not Found" : "Unknown" }}</h1>
         <div class="center error-description">
             <p v-if="error === '404'">
                 The requested pokemon could not be found.
@@ -52,7 +53,8 @@ function home(router) {
 
             width: 50vw
 
-    h1.orange
+    #error-title
+        text-align: center
         color: orange
 
     button
@@ -69,4 +71,11 @@ function home(router) {
         &:hover
             background: $bg-accent
             transition: background 0.2s ease
+
+
+.error-card.smaller
+    #error-title
+        margin: 0 0 20px 0 !important
+    .error-description
+            margin-top: 1em
 </style>

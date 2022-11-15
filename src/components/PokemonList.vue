@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import PokemonTile from './PokemonTile.vue';
+import ErrorCard from './_structure/ErrorCard.vue';
 
 
 const emits = defineEmits(['chgPage', 'outOfBounds'])
@@ -64,6 +65,12 @@ if (props.page*props.nbPerPage >= getFilteredList().length) {
             :url="pokemon.url"
         ></PokemonTile>
     </div>
+
+    <ErrorCard
+        v-if="isSearch && getSlicedList().length === 0"
+        error="404"
+        smaller
+    ></ErrorCard>
 </template>
 
 <style scoped lang="sass">
