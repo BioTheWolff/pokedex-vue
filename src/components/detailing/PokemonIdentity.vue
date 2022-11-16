@@ -1,7 +1,9 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import PokemonType from './PokemonType.vue';
 
-defineProps({
+const router = useRouter();
+const props = defineProps({
     image_url: String,
     is_legendary: Boolean,
     is_mythical: Boolean,
@@ -9,12 +11,22 @@ defineProps({
     name: String,
     id: Number,
     formatter: Function,
-    compact: Boolean
+    compact: Boolean,
+    activateClickResponse: Boolean,
 })
+
+function goToPokemonPage(pname) {
+    if (!props.activateClickResponse) return;
+
+    router.push({ name: 'details', params: { name: pname } })
+}
 </script>
 
 <template>
-    <div :class="`pokemon-identity ${compact ? 'compact' : ''}`">
+    <div 
+        :class="`pokemon-identity ${compact ? 'compact' : ''}`"
+        @click="goToPokemonPage(name)"
+    >
             <div 
             :class="`img-wrapper 
                 ${is_legendary ? 'legendary' : ''} 

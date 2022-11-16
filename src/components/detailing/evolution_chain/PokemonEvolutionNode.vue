@@ -1,5 +1,4 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import PokemonIdentity from '../PokemonIdentity.vue';
 
 const props = defineProps({
@@ -16,16 +15,11 @@ function format(text) {
     text = text.replace("-", " ");
     return text[0].toUpperCase() + text.substr(1);
 }
-
-function goToPokemonPage(pname) {
-    useRouter().push({ name: 'details', params: { name: pname } })
-}
 </script>
 
 <template>
     <div class="evolution-stage">
         <PokemonIdentity
-            @click="goToPokemonPage(stage.name)"
             :image_url="getImageUrl()"
             :is_legendary="stage.is_legendary"
             :is_mythical="stage.is_mythical"
@@ -34,6 +28,7 @@ function goToPokemonPage(pname) {
             :id="stage.id"
             :formatter="format"
             compact
+            activateClickResponse
             class="identity"
         ></PokemonIdentity>
         <div class="evolution-stage-children" v-if="stage.children">

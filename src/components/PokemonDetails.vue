@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import LoadingSpinner from './detailing/LoadingSpinner.vue'
+import { ref, watch } from 'vue';
+import LoadingSpinner from './detailing/LoadingSpinner.vue';
+import PokemonAbilities from './detailing/PokemonAbilities.vue';
 import PokemonType from './detailing/PokemonType.vue';
 import PokemonStats from './detailing/PokemonStats.vue';
 import PokemonIdentity from './detailing/PokemonIdentity.vue';
@@ -20,15 +21,23 @@ const pokedex = new Pokedex.Pokedex({
 let p = ref(null);
 let s = ref(null);
 
-try {
-    p.value = await pokedex.getPokemon(props.name);
 
-    // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
-    s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
-} catch (e) {
-    emitNotFound(e);
+watch(() => props.name, async () => {
+    await loadPokemon();
+})
+
+await loadPokemon();
+
+async function loadPokemon() {
+    try {
+        p.value = await pokedex.getPokemon(props.name);
+
+        // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
+        s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
+    } catch (e) {
+        emitNotFound(e);
+    }
 }
-
 
 function format(text) {
     if (text === undefined) return;
@@ -73,11 +82,20 @@ function emitNotFound(err) {
                 </section>
                 <section>
                     <h2>Abilities</h2>
-                    <ul>
-                        <li v-for="ability in p.abilities.filter((e) => !e.is_hidden)">
-                            {{ format(ability.ability.name) }}
-                        </li>
-                    </ul>
+                    <Suspense>
+                        <PokemonAbilities
+                            :pokedex="pokedex"
+                            :abilities="p.abilities"
+                            :formatter="format"
+                        ></PokemonAbilities>
+
+                        <template #fallback>
+                            <LoadingSpinner
+                                active
+                                text="Loading..."
+                            ></LoadingSpinner>
+                        </template>
+                    </Suspense>
                 </section>
                 <section class="evolution-chain">
                     <h2>Evolution tree</h2>
