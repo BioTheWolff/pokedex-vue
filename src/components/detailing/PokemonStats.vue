@@ -47,6 +47,7 @@ function range(stat, n) {
 .stats-container
     display: flex
     gap: 1em
+    width: fit-content
 
     @include for-up-to-tablet
         flex-direction: column

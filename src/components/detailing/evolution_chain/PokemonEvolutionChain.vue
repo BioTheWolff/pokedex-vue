@@ -23,8 +23,8 @@ if (req.value.chain.evolves_to.length === 0) {
 
 
 async function loadEvolutionTree() {
-    should_render_tree.value = true;
     chain.value = await buildChain(req.value.chain);
+    should_render_tree.value = true;
 }
 
 async function buildChain(stage) {
@@ -78,11 +78,17 @@ async function buildChain(stage) {
     display: flex
     flex-direction: column
     align-items: center
-
-    padding: 20px
-    gap: 20px
     border-radius: 10px
 
-    width: 95%
+    width: 80%
+    overflow-x: scroll
     background: $bg-card
+
+    > div
+        max-width: 100%
+        overflow-x: scroll
+        padding: 30px
+        gap: 20px
+
+
 </style>
