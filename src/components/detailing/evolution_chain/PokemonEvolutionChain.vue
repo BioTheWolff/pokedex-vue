@@ -11,10 +11,21 @@ const props = defineProps({
 const p = props.pokedex;
 const chain = ref({});
 
+let can_evolve = ref(true);
+let should_render_tree = ref(false);
+
 let req = ref(null);
 req.value = await p.resource(props.url);
 
-chain.value = await buildChain(req.value.chain)
+if (req.value.chain.evolves_to.length === 0) {
+    can_evolve.value = false;
+}
+
+
+async function loadEvolutionTree() {
+    should_render_tree.value = true;
+    chain.value = await buildChain(req.value.chain);
+}
 
 async function buildChain(stage) {
     let is_current = props.species.name === stage.species.name
@@ -42,7 +53,35 @@ async function buildChain(stage) {
 </script>
 
 <template>
-    <PokemonEvolutionNode
-        :stage="chain" first
-    ></PokemonEvolutionNode>
+    <div class="evolution-chain-wrapper">
+        <div v-if="can_evolve">
+            <button 
+                class="button"
+                v-if="!should_render_tree"
+                @click="loadEvolutionTree()"
+            >
+                Load evolution tree
+            </button>
+
+            <PokemonEvolutionNode
+                v-if="should_render_tree"
+                :stage="chain" first
+            ></PokemonEvolutionNode>
+        </div>
+
+        <p v-else>This pokemon cannot evolve.</p>
+    </div>
 </template>
+
+<style scoped lang="sass">
+.evolution-chain-wrapper
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    padding: 20px
+    gap: 20px
+
+    width: 100%
+    background: $bg-accent
+</style>

@@ -26,7 +26,7 @@ function home(router) {
             </p>
 
             <p>
-                You should either <button @click="back()">go back</button> or <button @click="home($router)">go to the homepage</button>
+                You should either <button class="button" @click="back()">go back</button> or <button class="button" @click="home($router)">go to the homepage</button>
             </p>
         </div>
     </div>
@@ -56,21 +56,6 @@ function home(router) {
     #error-title
         text-align: center
         color: orange
-
-    button
-        cursor: pointer
-        margin: 0 10px
-        padding: 5px 10px
-        background: transparent
-        color: $color
-        font-size: 0.8em
-        border: 1px solid grey
-        border-radius: 10px
-        transition: background 0.2s ease
-
-        &:hover
-            background: $bg-accent
-            transition: background 0.2s ease
 
 
 .error-card.smaller

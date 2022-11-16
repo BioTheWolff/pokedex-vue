@@ -1,4 +1,6 @@
 <script setup>
+import PokemonIdentity from '../PokemonIdentity.vue';
+
 const props = defineProps({
     stage: Object,
     first: Boolean
@@ -7,25 +9,46 @@ const props = defineProps({
 function getImageUrl() {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${props.stage.id}.png`
 }
+
+function format(text) {
+    if (text === undefined) return;
+    text = text.replace("-", " ");
+    return text[0].toUpperCase() + text.substr(1);
+}
 </script>
 
 <template>
     <div class="evolution-stage">
-        {{stage.name}}
-        <PokemonEvolutionNode
-            v-if="stage.children"
-            v-for="(child, index) in stage.children"
-            :key="`${stage.name}-${index}`"
-            :stage="child"
-        ></PokemonEvolutionNode>
+        <PokemonIdentity
+            :image_url="getImageUrl()"
+            :is_legendary="stage.is_legendary"
+            :is_mythical="stage.is_mythical"
+            :is_baby="stage.is_baby"
+            :name="stage.name"
+            :id="stage.id"
+            :formatter="format"
+            compact
+        ></PokemonIdentity>
+        <div class="evolution-stage-children" v-if="stage.children">
+            <PokemonEvolutionNode
+                v-for="(child, index) in stage.children"
+                :key="`${stage.name}-${index}`"
+                :stage="child"
+            ></PokemonEvolutionNode>
+        </div>
     </div>
 </template>
 
 <style scoped lang="sass">
 .evolution-stage
     display: flex
-    background: $bg-accent
-    border: 1px solid black
-    padding: 5px
-    margin: 5px
+    flex-direction: column
+    width: fit-content
+    height: fit-content
+    gap: 20px
+
+    &-children
+        display: flex
+        flex-direction: row
+        justify-content: center
 </style>
