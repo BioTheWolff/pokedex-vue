@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import PokemonType from './detailing/PokemonType.vue';
 import PokemonStats from './detailing/PokemonStats.vue';
+import PokemonEvolutionChain from './detailing/evolution_chain/PokemonEvolutionChain.vue';
 
 const emits = defineEmits(['notFound'])
 const props = defineProps({
@@ -20,14 +21,8 @@ let s = ref(null);
 try {
     p.value = await pokedex.getPokemon(props.name);
 
-    // bug on the wrapper - trying to fetch one pokemon species fetches all of them
-    // using the endpoint ourselves to fix this
-    let req = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${props.name}`);
-    if (req.status === 200) {
-        s.value = await req.json();
-    } else {
-        throw Error(`Request failed with status code ${req.status}`)
-    }
+    // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
+    s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
 } catch (e) {
     emitNotFound(e);
 }
@@ -89,28 +84,29 @@ function emitNotFound(err) {
                 </section>
             </div>
             <div class="info">
-                <div>
-                    <section>
-                        <h2>Stats</h2>
-                        <PokemonStats
-                            :stats="p.stats"
-                            :formatter="format"
-                        ></PokemonStats>
-                    </section>
-                </div>
-                <div>
-                    <section>
-                        <h2>Abilities</h2>
-                        <ul>
-                            <li v-for="ability in p.abilities.filter((e) => !e.is_hidden)">
-                                {{ format(ability.ability.name) }}
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                <div>
-                    
-                </div>
+                <section>
+                    <h2>Stats</h2>
+                    <PokemonStats
+                        :stats="p.stats"
+                        :formatter="format"
+                    ></PokemonStats>
+                </section>
+                <section>
+                    <h2>Abilities</h2>
+                    <ul>
+                        <li v-for="ability in p.abilities.filter((e) => !e.is_hidden)">
+                            {{ format(ability.ability.name) }}
+                        </li>
+                    </ul>
+                </section>
+                <section class="evolution-chain">
+                    <h2>Evolution chain</h2>
+                    <PokemonEvolutionChain
+                        :pokedex="pokedex"
+                        :url="s.evolution_chain.url"
+                        :species="s"
+                    ></PokemonEvolutionChain>
+                </section>
             </div>
         </div>
     </article>
@@ -186,7 +182,7 @@ function emitNotFound(err) {
 
     .info
         display: grid
-        grid-template: auto / auto auto auto
+        grid-template: auto auto / auto auto
         gap: 3em
 
         @include for-phone-only
@@ -194,7 +190,10 @@ function emitNotFound(err) {
             flex-direction: column
             gap: 1em
 
-        & > div
+        & > section
             display: flex
             flex-direction: column
+
+        .evolution-chain
+            grid-column: 1 / 3
 </style>
