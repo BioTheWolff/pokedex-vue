@@ -101,11 +101,13 @@ function emitNotFound(err) {
                 </section>
                 <section class="evolution-chain">
                     <h2>Evolution chain</h2>
-                    <PokemonEvolutionChain
-                        :pokedex="pokedex"
-                        :url="s.evolution_chain.url"
-                        :species="s"
-                    ></PokemonEvolutionChain>
+                    <Suspense>
+                        <PokemonEvolutionChain
+                            :pokedex="pokedex"
+                            :url="s.evolution_chain.url"
+                            :species="s"
+                        ></PokemonEvolutionChain>
+                    </Suspense>
                 </section>
             </div>
         </div>

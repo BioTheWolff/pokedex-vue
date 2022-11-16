@@ -14,22 +14,30 @@ const chain = ref({});
 let req = ref(null);
 req.value = await p.resource(props.url);
 
-chain.value = {
-    name: props.species.name,
-    children: buildChain(req.value.chain)
-}
+chain.value = await buildChain(req.value.chain)
 
-function buildChain(stage) {
-    if (stage.evolves_to.length === 0) return [];
+async function buildChain(stage) {
+    let is_current = props.species.name === stage.species.name
+    let data = is_current
+        ? props.species
+        : await props.pokedex.resource(stage.species.url)
 
     let children = [];
-    for (let child of stage.evolves_to) {
-        children.push({
-            name: child.species.name,
-            children: buildChain(child)
-        })
+    if (stage.evolves_to.length > 0) {
+        for (let child of stage.evolves_to) {
+            children.push(await buildChain(child))
+        }
     }
-    return children;
+
+    return {
+        id: data.id,
+        name: data.name,
+        is_baby: data.is_baby,
+        is_mythical: data.is_mythical,
+        is_legendary: data.is_legendary,
+        is_current: is_current,
+        children: children
+    };
 }
 </script>
 
