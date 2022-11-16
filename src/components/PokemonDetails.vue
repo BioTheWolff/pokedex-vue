@@ -83,11 +83,13 @@ function emitNotFound(err) {
                 <section>
                     <h2>Abilities</h2>
                     <Suspense>
-                        <PokemonAbilities
-                            :pokedex="pokedex"
-                            :abilities="p.abilities"
-                            :formatter="format"
-                        ></PokemonAbilities>
+                        <div class="abilities">
+                            <PokemonAbilities
+                                :pokedex="pokedex"
+                                :abilities="p.abilities"
+                                :formatter="format"
+                            ></PokemonAbilities>
+                        </div>
 
                         <template #fallback>
                             <LoadingSpinner
@@ -144,12 +146,11 @@ function emitNotFound(err) {
             align-items: center
 
     .info
-        display: grid
-        grid-template: auto auto / auto auto
+        display: flex
+        flex-wrap: wrap
         gap: 3em
 
         @include for-up-to-wide
-            display: flex
             flex-direction: column
             gap: 1em
 
@@ -158,6 +159,14 @@ function emitNotFound(err) {
             display: flex
             flex-direction: column
 
+            h2
+                width: fit-content
+
         .evolution-chain
-            grid-column: 1 / 3
+            width: 80%
+
+        .abilities
+            display: flex
+            flex-direction: column
+            gap: 1em
 </style>

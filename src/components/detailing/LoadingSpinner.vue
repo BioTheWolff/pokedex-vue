@@ -49,10 +49,10 @@
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 8px solid #cac717;
+    border: 8px solid #ed951b;
     border-radius: 50%;
     animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #cac717 transparent transparent transparent;
+    border-color: #ed951b transparent transparent transparent;
   }
   .loader div:nth-child(1) {
     animation-delay: -0.45s;
