@@ -48,6 +48,13 @@ function format(text) {
 function emitNotFound(err) {
     emits('notFound', err);
 }
+
+function getMostImportantType() {
+    if (s.value.is_legendary) return 'legendary';
+    if (s.value.is_mythical) return 'mythical';
+    if (s.value.is_baby) return 'baby';
+    return '';
+}
 </script>
 
 <template>
@@ -78,6 +85,7 @@ function emitNotFound(err) {
                     <PokemonStats
                         :stats="p.stats"
                         :formatter="format"
+                        :identity_type="getMostImportantType()"
                     ></PokemonStats>
                 </section>
                 <section>

@@ -90,8 +90,8 @@ defineProps({
         border: none
         padding: 7px 12px
 
-        background: rgb(187,51,195)
-        background: linear-gradient(138deg, rgba(187,51,195,1) 0%, rgba(121,68,230,1) 57%, rgba(0,80,255,1) 100%)
+        background: $legendary-color
+        background: $legendary-gradient
 
     &.mythical-pokemon
         margin-bottom: 2em
@@ -99,6 +99,6 @@ defineProps({
         padding: 7px 12px
         color: #333
         
-        background: rgb(247,255,0)
-        background: radial-gradient(circle, rgba(247,255,0,1) 0%, rgba(246,214,13,1) 55%, rgba(245,161,20,1) 100%)
+        background: $mythical-color
+        background: $mythical-gradient
 </style>

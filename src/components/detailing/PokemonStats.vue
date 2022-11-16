@@ -2,6 +2,7 @@
 defineProps({
     stats: Array,
     formatter: Function,
+    identity_type: String,
 })
 
 const MAX_STATS = {
@@ -33,7 +34,7 @@ function range(stat, n) {
 </script>
 
 <template>
-    <div class="stats-container">
+    <div :class="`stats-container ${identity_type ?? ''}`">
         <div class="stat" v-for="stat in stats">
             <div v-for="classes in range(stat, 15)" :class="classes"></div>
             <div class="name" role="meter" :aria-valuenow="stat.base_stat">
@@ -87,4 +88,11 @@ function range(stat, n) {
 
             &.active
                 background: #6ca7f2
+
+    &.legendary .bar.active
+        background: $legendary-color
+    &.mythical .bar.active
+        background: $mythical-color
+    &.baby .bar.active
+        background: $baby-color
 </style>

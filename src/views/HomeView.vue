@@ -152,7 +152,7 @@ function search() {
     & > div
         padding: .4em .8em
         border-radius: 10px
-        background-color: #128c53
+        background: $legendary-gradient
     
     form
         display: flex

@@ -25,8 +25,8 @@ async function run() {
 <template>
     <details
         class="ability"
-        v-for="(ability, index) of formed_abilities"
-        :key="index"
+        v-for="ability of formed_abilities"
+        :key="ability.name"
     >
         <summary>{{ formatter(ability.name) }}</summary>
         <p>{{ ability.effect_entries.filter(e => e.language.name === 'en')[0].effect }}</p>
@@ -38,6 +38,8 @@ async function run() {
     width: 70%
     display: flex
     padding: 10px
+    max-height: 150px
+    overflow-y: scroll
 
     background: $bg-card
     border: 3px solid $bg-accent
@@ -49,5 +51,4 @@ async function run() {
     p
         margin: 20px 0 0 0
         word-break: normal
-        text-align: justify
 </style>

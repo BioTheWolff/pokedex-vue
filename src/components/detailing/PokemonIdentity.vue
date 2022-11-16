@@ -88,7 +88,7 @@ function goToPokemonPage(pname) {
         height: $img-size-details
         margin-bottom: 1em
 
-        &.legendary, &.mythical
+        &.legendary, &.mythical, &.baby
 
             &::before
                 content: ""
@@ -108,9 +108,9 @@ function goToPokemonPage(pname) {
                 background: linear-gradient(138deg, rgba(187,51,195,1) 0%, rgba(121,68,230,1) 57%, rgba(0,80,255,1) 100%)
                 clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)
 
-        &.baby
-            background: #8be39d
-            border-radius: 50px
+            &.baby::before
+                background: #8be39d
+                border-radius: 50%
 
         img
             position: relative
@@ -135,7 +135,7 @@ function goToPokemonPage(pname) {
             height: $img-size-default
             margin-bottom: 0
 
-            &.legendary, &.mythical
+            &.legendary, &.mythical, &.baby
                 &::before
                     width: $img-size-default
                     height: $img-size-default
