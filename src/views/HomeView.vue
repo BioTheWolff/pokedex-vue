@@ -39,11 +39,15 @@ function setPageValue() {
   // use the page number from the route if it exists
   if (route.params.page && Number(route.params.page) >= 1) {
     page.value = Number(route.params.page)-1;
+  } else {
+    page.value = 0;
   }
 
   // this is the "search" route case
   if (route.query.page && Number(route.query.page) >= 1) {
     search_page.value = Number(route.query.page)-1;
+  } else {
+    search_page.value = 0;
   }
 
   title.value = is_searching.value ? "Pokemons Search" : "Pokemons List";

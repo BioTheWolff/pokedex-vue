@@ -115,6 +115,9 @@ function emitNotFound(err) {
         flex-direction: column
         margin: 0 4em 0 0
 
+        @include for-up-to-tablet
+            margin-right: 0
+
         .types
             margin-top: 1em
             gap: 0.5em
@@ -127,12 +130,13 @@ function emitNotFound(err) {
         grid-template: auto auto / auto auto
         gap: 3em
 
-        @include for-phone-only
+        @include for-up-to-wide
             display: flex
             flex-direction: column
             gap: 1em
 
         & > section
+            max-width: 100vw
             display: flex
             flex-direction: column
 

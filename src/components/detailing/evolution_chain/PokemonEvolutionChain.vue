@@ -81,7 +81,8 @@ async function buildChain(stage) {
 
     padding: 20px
     gap: 20px
+    border-radius: 10px
 
-    width: 100%
-    background: $bg-accent
+    width: 95%
+    background: $bg-card
 </style>

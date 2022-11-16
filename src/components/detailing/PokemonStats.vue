@@ -48,8 +48,12 @@ function range(stat, n) {
     display: flex
     gap: 1em
 
+    @include for-up-to-tablet
+        flex-direction: column
+
     background: $bg-card
     padding: 15px
+    border-radius: 10px
 
     .stat
         display: flex
@@ -58,15 +62,27 @@ function range(stat, n) {
         gap: 10px
         width: 90px
 
+        @include for-up-to-tablet
+            flex-direction: row-reverse
+            width: unset
+            height: 80px
+
         .name
             text-align: center
             word-wrap: break-word
+
+            @include for-up-to-tablet
+                text-align: right
 
         .bar
             display: block
             height: 8px
             width: 80px
             background: #6d6d6d
+
+            @include for-up-to-tablet
+                height: 70px
+                width: 12px
 
             &.active
                 background: #6ca7f2
