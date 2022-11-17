@@ -21,8 +21,8 @@ const pokedex = new Pokedex.Pokedex({
 
 
 let pokemons = ref([]);
-let pokemons_list = await pokedex.getPokemonsList();
-pokemons.value = pokemons_list.results.filter(e => getPokemonId(e.url) < 906);
+let pokemons_list = await pokedex.getPokemonSpeciesList();
+pokemons.value = pokemons_list.results;
 
 function getFilteredList() {
     if (!props.isSearch) {

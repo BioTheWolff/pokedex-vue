@@ -18,23 +18,50 @@ const pokedex = new Pokedex.Pokedex({
 });
 
 
-let p = ref(null);
 let s = ref(null);
+let varieties = ref(null);
+
+let p = ref(null);
 
 
 watch(() => props.name, async () => {
-    await loadPokemon();
+    await loadSpecies();
 })
 
-await loadPokemon();
+await loadSpecies();
 
-async function loadPokemon() {
+async function loadSpecies() {
     try {
-        p.value = await pokedex.getPokemon(props.name);
-
         // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
-        s.value = await pokedex.resource(p.value.species.url);
+        s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
+
+        // fetch all the varieties for this species
+        varieties.value = await pokedex.resource(
+            s.value.varieties.map(e => e.pokemon.url)
+        );
+
+        // convert into an object to be able to fit it well
+        varieties.value = varieties.value.reduce((o, cur) => (
+            { ...o, [cur.name]: {
+                id: cur.id,
+                name: cur.name,
+                variety_name: cur.name.includes('-')
+                    ? cur.name.split('-')[cur.name.split('-').length - 1]
+                    : null,
+                abilities: cur.abilities,
+                stats: cur.stats,
+                types: cur.types,
+                image_url: cur.sprites.other['official-artwork'].front_default
+            }}
+        ), {});
+        console.log(varieties.value)
+
+        
+        // now find the default variety for this species and select it
+        p.value = varieties.value[s.value.varieties.filter(e => e.is_default)[0].pokemon.name];
+
     } catch (e) {
+        console.log(e);
         emitNotFound(e);
     }
 }
@@ -61,23 +88,39 @@ function getMostImportantType() {
     <article v-if="p && s">
         <div id="site-content" class="pokemon-details">
             <div class="main">
-                <PokemonIdentity
-                    :image_url="p.sprites.other['official-artwork'].front_default"
-                    :is_legendary="s.is_legendary"
-                    :is_mythical="s.is_mythical"
-                    :is_baby="s.is_baby"
-                    :name="p.name"
-                    :id="p.id"
-                    :formatter="format"
-                ></PokemonIdentity>
-                <section class="types">
-                    <PokemonType
-                        v-for="ptype in p.types"
-                        :type="ptype.type.name"
-                        :key="ptype.slot"
+                <div class="varieties" v-if="s.varieties.length > 1">
+                    <PokemonIdentity
+                        v-for="v in varieties"
+                        :image_url="v.image_url"
+                        :is_legendary="s.is_legendary"
+                        :is_mythical="s.is_mythical"
+                        :is_baby="s.is_baby"
+                        :name="v.name"
+                        :variety="v.variety_name"
+                        :id="v.id"
                         :formatter="format"
-                    ></PokemonType>
-                </section>
+                        compact hide-name
+                    ></PokemonIdentity>
+                </div>
+                <div>
+                    <PokemonIdentity
+                        :image_url="p.image_url"
+                        :is_legendary="s.is_legendary"
+                        :is_mythical="s.is_mythical"
+                        :is_baby="s.is_baby"
+                        :name="p.name"
+                        :id="p.id"
+                        :formatter="format"
+                    ></PokemonIdentity>
+                    <section class="types">
+                        <PokemonType
+                            v-for="ptype in p.types"
+                            :type="ptype.type.name"
+                            :key="ptype.slot"
+                            :formatter="format"
+                        ></PokemonType>
+                    </section>
+                </div>
             </div>
             <div class="info-wrapper">
                 <div class="info">
@@ -144,11 +187,18 @@ function getMostImportantType() {
     
     .main
         display: flex
-        flex-direction: column
-        margin: 0 4em 0 0
+        flex-direction: row
+        justify-content: right
+        margin: 0 2em 0 0
 
         @include for-up-to-tablet
             margin-right: 0
+
+        .varieties-wrapper
+            display: flex
+            justify-content: flex-end
+            .varieties
+                width: fit-content
 
         .types
             margin-top: 1em

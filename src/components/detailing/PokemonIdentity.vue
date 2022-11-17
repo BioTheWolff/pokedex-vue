@@ -5,14 +5,23 @@ import PokemonType from './PokemonType.vue';
 const router = useRouter();
 const props = defineProps({
     image_url: String,
+
     is_legendary: Boolean,
     is_mythical: Boolean,
     is_baby: Boolean,
-    name: String,
+
     id: Number,
+    name: String,
+    variety: {
+        type: String,
+        default: null,
+    },
+
     formatter: Function,
-    compact: Boolean,
     activateClickResponse: Boolean,
+
+    compact: Boolean,
+    hideName: Boolean
 })
 
 function goToPokemonPage(pname) {
@@ -51,7 +60,7 @@ function formattedName() {
         >
             <img :src="image_url">
         </div>
-        <div class="name">
+        <div class="name" v-if="!hideName">
             <h1 v-if="!compact">{{ formattedName() }}</h1>
             <p v-else>{{ formattedName() }}</p>
 
@@ -142,6 +151,9 @@ function formattedName() {
 
 
     &.compact
+        width: fit-content
+        height: fit-content
+
         .name > p
             margin: 0
 
