@@ -96,7 +96,7 @@ function childrenCount() {
             width: 40px
             height: 40px
             
-            background-color: #dcdcdc
+            background-color: rgb(44, 47, 49)
             transform: rotate(180deg)
             clip-path: polygon(70% 100%, 70% 40%, 100% 40%, 50% 0%, 0% 40%, 30% 40%, 30% 100%)
 

@@ -36,9 +36,11 @@ function range(stat, n) {
 <template>
     <div :class="`stats-container ${identity_type ?? ''}`">
         <div class="stat" v-for="stat in stats">
-            <div v-for="classes in range(stat, 15)" :class="classes"></div>
+            <div class="bars-wrapper">
+                <div v-for="classes in range(stat, 15)" :class="classes"></div>
+            </div>
             <div class="name" role="meter" :aria-valuenow="stat.base_stat">
-                {{ formatter(stat.stat.name) }}
+                {{ formatter(stat.stat.name) }}<span class="mobile">: {{stat.base_stat}}</span>
             </div>
         </div>
     </div>
@@ -52,6 +54,7 @@ function range(stat, n) {
 
     @include for-up-to-tablet
         flex-direction: column
+        width: 88vw
 
     background: $bg-card
     padding: 15px
@@ -61,33 +64,44 @@ function range(stat, n) {
         display: flex
         flex-direction: column
         align-items: center
-        gap: 10px
-        width: 90px
 
-        @include for-up-to-tablet
-            flex-direction: row-reverse
-            width: unset
-            height: 80px
+        .bars-wrapper
+            display: flex
+            flex-direction: column
+            align-items: center
+            gap: 10px
+            width: 90px
+
+            @include for-up-to-tablet
+                flex-direction: row-reverse
+                width: unset
+                height: 80px
+
+            .bar
+                display: block
+                height: 8px
+                width: 80px
+                background: #6d6d6d
+
+                @include for-up-to-tablet
+                    height: 70px
+                    width: 12px
+
+                &.active
+                    background: #6ca7f2
 
         .name
             text-align: center
             word-wrap: break-word
 
             @include for-up-to-tablet
-                text-align: right
+                text-align: left
+                order: -1
 
-        .bar
-            display: block
-            height: 8px
-            width: 80px
-            background: #6d6d6d
-
-            @include for-up-to-tablet
-                height: 70px
-                width: 12px
-
-            &.active
-                background: #6ca7f2
+            .mobile
+                display: none
+                @include for-up-to-tablet
+                    display: inline
 
     &.legendary .bar.active
         background: $legendary-color

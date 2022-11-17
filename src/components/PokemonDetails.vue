@@ -79,51 +79,55 @@ function getMostImportantType() {
                     ></PokemonType>
                 </section>
             </div>
-            <div class="info">
-                <section>
-                    <h2>Stats</h2>
-                    <PokemonStats
-                        :stats="p.stats"
-                        :formatter="format"
-                        :identity_type="getMostImportantType()"
-                    ></PokemonStats>
-                </section>
-                <section>
-                    <h2>Abilities</h2>
-                    <Suspense>
-                        <div class="abilities">
-                            <PokemonAbilities
+            <div class="info-wrapper">
+                <div class="info">
+                    <section>
+                        <h2>Stats</h2>
+                        <PokemonStats
+                            :stats="p.stats"
+                            :formatter="format"
+                            :identity_type="getMostImportantType()"
+                        ></PokemonStats>
+                    </section>
+                    <section>
+                        <h2>Abilities</h2>
+                        <Suspense>
+                            <div class="abilities">
+                                <PokemonAbilities
+                                    :pokedex="pokedex"
+                                    :abilities="p.abilities"
+                                    :formatter="format"
+                                ></PokemonAbilities>
+                            </div>
+
+                            <template #fallback>
+                                <LoadingSpinner
+                                    active
+                                    text="Loading..."
+                                ></LoadingSpinner>
+                            </template>
+                        </Suspense>
+                    </section>
+                </div>
+                <div class="info">
+                    <section class="evolution-chain">
+                        <h2>Evolution tree</h2>
+                        <Suspense>
+                            <PokemonEvolutionChain
                                 :pokedex="pokedex"
-                                :abilities="p.abilities"
-                                :formatter="format"
-                            ></PokemonAbilities>
-                        </div>
+                                :url="s.evolution_chain.url"
+                                :species="s"
+                            ></PokemonEvolutionChain>
 
-                        <template #fallback>
-                            <LoadingSpinner
-                                active
-                                text="Loading..."
-                            ></LoadingSpinner>
-                        </template>
-                    </Suspense>
-                </section>
-                <section class="evolution-chain">
-                    <h2>Evolution tree</h2>
-                    <Suspense>
-                        <PokemonEvolutionChain
-                            :pokedex="pokedex"
-                            :url="s.evolution_chain.url"
-                            :species="s"
-                        ></PokemonEvolutionChain>
-
-                        <template #fallback>
-                            <LoadingSpinner
-                                active
-                                text="Loading..."
-                            ></LoadingSpinner>
-                        </template>
-                    </Suspense>
-                </section>
+                            <template #fallback>
+                                <LoadingSpinner
+                                    active
+                                    text="Loading..."
+                                ></LoadingSpinner>
+                            </template>
+                        </Suspense>
+                    </section>
+                </div>
             </div>
         </div>
     </article>
@@ -153,6 +157,15 @@ function getMostImportantType() {
             flex-direction: column
             align-items: center
 
+    .info-wrapper
+        display: flex
+        flex-direction: column
+        gap: 3em
+
+        @include for-up-to-wide
+            flex-direction: column
+            gap: 1em
+
     .info
         display: flex
         flex-wrap: wrap
@@ -171,7 +184,7 @@ function getMostImportantType() {
                 width: fit-content
 
         .evolution-chain
-            width: 80%
+            width: 100%
 
         .abilities
             display: flex

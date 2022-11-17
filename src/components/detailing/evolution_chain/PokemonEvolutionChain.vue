@@ -84,6 +84,9 @@ async function buildChain(stage) {
     overflow-x: scroll
     background: $bg-card
 
+    @include for-up-to-tablet
+        width: 95vw
+
     > div
         max-width: 100%
         overflow-x: scroll
