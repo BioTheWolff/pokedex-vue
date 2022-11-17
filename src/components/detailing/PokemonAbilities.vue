@@ -52,15 +52,17 @@ function getFlavorText(ability) {
     width: 70%
     display: flex
     padding: 10px
-    max-height: 150px
-    overflow-y: scroll
+
+    &[open]
+        width: 50%
+
+    @include for-up-to-tablet
+        max-height: 150px
+        overflow-y: scroll
 
     background: $bg-card
     border: 3px solid $bg-accent
     border-radius: 10px
-
-    @include for-wide-and-up
-        width: 250px
 
     p
         margin: 20px 0 0 0

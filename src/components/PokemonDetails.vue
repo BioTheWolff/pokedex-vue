@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import LoadingSpinner from './detailing/LoadingSpinner.vue';
 import PokemonAbilities from './detailing/PokemonAbilities.vue';
 import PokemonType from './detailing/PokemonType.vue';
@@ -7,9 +8,11 @@ import PokemonStats from './detailing/PokemonStats.vue';
 import PokemonIdentity from './detailing/PokemonIdentity.vue';
 import PokemonEvolutionChain from './detailing/evolution_chain/PokemonEvolutionChain.vue';
 
+const route = useRoute();
 const emits = defineEmits(['notFound'])
 const props = defineProps({
     name: String,
+    variety: String,
 })
 
 const pokedex = new Pokedex.Pokedex({
@@ -18,6 +21,7 @@ const pokedex = new Pokedex.Pokedex({
 });
 
 
+let hasError = ref(false);
 let s = ref(null);
 let varieties = ref(null);
 
@@ -28,9 +32,18 @@ watch(() => props.name, async () => {
     await loadSpecies();
 })
 
-await loadSpecies();
+watch(() => route.params.variety, () => {
+    loadVariety();
+})
+
+// run the species then variety load
+if (await loadSpecies()) {
+    loadVariety();
+}
+
 
 async function loadSpecies() {
+    hasError.value = false;
     try {
         // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
         s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
@@ -46,8 +59,8 @@ async function loadSpecies() {
                 id: cur.id,
                 name: cur.name,
                 variety_name: cur.name.includes('-')
-                    ? cur.name.split('-')[cur.name.split('-').length - 1]
-                    : null,
+                    ? cur.name.split('-').slice(1).join('-')
+                    : "_default",
                 abilities: cur.abilities,
                 stats: cur.stats,
                 types: cur.types,
@@ -55,14 +68,39 @@ async function loadSpecies() {
             }}
         ), {});
         console.log(varieties.value)
-
         
         // now find the default variety for this species and select it
         p.value = varieties.value[s.value.varieties.filter(e => e.is_default)[0].pokemon.name];
 
     } catch (e) {
-        console.log(e);
         emitNotFound(e);
+        return false;
+    }
+    return true;
+}
+
+function loadVariety() {
+    if (!route.params.variety) return;
+
+    hasError.value = false;
+
+    if (s.value && varieties.value) {
+        // the species and the varieties are set, we can continue
+        let full_name = `${route.params.name}-${route.params.variety}`;
+
+        // exception is _default in case the default has no name
+        if (route.params.variety === '_default') {
+            p.value = varieties.value[s.value.varieties.filter(e => e.is_default)[0].pokemon.name];
+            return;
+        }
+
+
+        if (!(full_name in varieties.value)) {
+            emitNotFound("404");
+            return;
+        } else {
+            p.value = varieties.value[full_name];
+        }
     }
 }
 
@@ -73,6 +111,7 @@ function format(text) {
 }
 
 function emitNotFound(err) {
+    hasError.value = true;
     emits('notFound', err);
 }
 
@@ -85,7 +124,7 @@ function getMostImportantType() {
 </script>
 
 <template>
-    <article v-if="p && s">
+    <article v-if="!hasError">
         <div id="site-content" class="pokemon-details">
             <div class="main">
                 <div class="varieties" v-if="s.varieties.length > 1">
@@ -95,11 +134,11 @@ function getMostImportantType() {
                         :is_legendary="s.is_legendary"
                         :is_mythical="s.is_mythical"
                         :is_baby="s.is_baby"
-                        :name="v.name"
+                        :name="s.name"
                         :variety="v.variety_name"
                         :id="v.id"
                         :formatter="format"
-                        compact hide-name
+                        compact hide-name activate-click-response
                     ></PokemonIdentity>
                 </div>
                 <div>
@@ -193,12 +232,13 @@ function getMostImportantType() {
 
         @include for-up-to-tablet
             margin-right: 0
+            justify-content: center
 
-        .varieties-wrapper
+        .varieties
             display: flex
-            justify-content: flex-end
-            .varieties
-                width: fit-content
+            flex-direction: column
+            width: fit-content
+            gap: 1em
 
         .types
             margin-top: 1em
@@ -218,11 +258,11 @@ function getMostImportantType() {
 
     .info
         display: flex
+        flex-direction: column
         flex-wrap: wrap
         gap: 3em
 
         @include for-up-to-wide
-            flex-direction: column
             gap: 1em
 
         & > section

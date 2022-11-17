@@ -21,7 +21,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/pokemon/:name',
+      path: '/pokemon/:name/:variety?',
       name: 'details',
       component: () => import('../views/DetailsView.vue')
     },

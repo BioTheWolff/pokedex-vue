@@ -3,6 +3,7 @@
 
 #site-header
   height: 10vh
+  z-index: 15
   background-color: $bg-accent
 
   display: flex
@@ -35,9 +36,10 @@
         left: 0px
         width: 70vw
         height: calc(100vh - $header-height)
+        z-index: 10
 
         background: $bg-card
-        box-shadow: 10px 4px 16px -5px rgba(0,0,0,0.63)
+        box-shadow: 20px 5px 16px -9px rgba(0,0,0,0.63)
 
 
       a:not(:last-of-type)

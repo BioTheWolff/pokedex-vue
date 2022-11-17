@@ -24,10 +24,15 @@ const props = defineProps({
     hideName: Boolean
 })
 
-function goToPokemonPage(pname) {
+function goToPokemonPage() {
     if (!props.activateClickResponse) return;
 
-    router.push({ name: 'details', params: { name: pname } })
+    let params = { name: props.name };
+    if (props.variety) {
+        params.variety = props.variety;
+    }
+
+    router.push({ name: 'details', params: params })
 }
 
 function formattedName() {
@@ -36,8 +41,7 @@ function formattedName() {
     // replace dashes with parenthesis wrapping
     if (name.includes('-')) {
         let n = name.split('-');
-        n[n.length - 1] = `(${n[n.length - 1]})`
-        name = n.join(' ')
+        name = `${n[0]} (${n.slice(1).join(' ')})`
     }
 
     name = name[0].toUpperCase() + name.substr(1);
@@ -48,8 +52,10 @@ function formattedName() {
 
 <template>
     <div 
-        :class="`pokemon-identity ${compact ? 'compact' : ''}`"
-        @click="goToPokemonPage(name)"
+        :class="`pokemon-identity 
+            ${compact ? 'compact' : ''} 
+            ${activateClickResponse ? 'pointer' : ''}`"
+        @click="goToPokemonPage()"
     >
             <div 
             :class="`img-wrapper 
@@ -95,6 +101,9 @@ function formattedName() {
     flex-direction: column
     align-items: center
 
+    &.pointer
+        cursor: pointer
+
     .name
         display: flex
         flex-direction: column
@@ -123,17 +132,17 @@ function formattedName() {
                 z-index: 1
 
             &.mythical::before
-                background: rgb(247,255,0)
-                background: radial-gradient(circle, rgba(247,255,0,1) 0%, rgba(246,214,13,1) 55%, rgba(245,161,20,1) 100%)
-                clip-path: polygon(50% 0%, 90% 25%, 90% 100%, 50% 75%, 10% 100%, 10% 25%)
+                background: $mythical-color
+                background: $mythical-gradient
+                clip-path: $mythical-clip-path
 
             &.legendary::before
-                background: rgb(187,51,195)
-                background: linear-gradient(138deg, rgba(187,51,195,1) 0%, rgba(121,68,230,1) 57%, rgba(0,80,255,1) 100%)
-                clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)
+                background: $legendary-color
+                background: $legendary-gradient
+                clip-path: $legendary-clip-path
 
             &.baby::before
-                background: #8be39d
+                background: $baby-color
                 border-radius: 50%
 
         img
