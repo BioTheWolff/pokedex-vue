@@ -20,6 +20,20 @@ async function run() {
     urls.value = props.abilities.filter((e) => !e.is_hidden).map(e => e.ability.url)
     formed_abilities.value = await props.pokedex.resource(urls.value);
 }
+
+function getEffectEntry(ability) {
+    let en = ability.effect_entries.filter(e => e.language.name === 'en');
+
+    if (en.length === 0) return;
+    return en[0].effect;
+}
+
+function getFlavorText(ability) {
+    let en = ability.flavor_text_entries.filter(e => e.language.name === 'en');
+
+    if (en.length === 0) return;
+    return en[0].flavor_text;
+}
 </script>
 
 <template>
@@ -29,7 +43,7 @@ async function run() {
         :key="ability.name"
     >
         <summary>{{ formatter(ability.name) }}</summary>
-        <p>{{ ability.effect_entries.filter(e => e.language.name === 'en')[0].effect }}</p>
+        <p>{{ getEffectEntry(ability) ?? getFlavorText(ability) ?? "No description found." }}</p>
     </details>
 </template>
 
