@@ -20,6 +20,21 @@ function goToPokemonPage(pname) {
 
     router.push({ name: 'details', params: { name: pname } })
 }
+
+function formattedName() {
+    let name = props.name;
+
+    // replace dashes with parenthesis wrapping
+    if (name.includes('-')) {
+        let n = name.split('-');
+        n[n.length - 1] = `(${n[n.length - 1]})`
+        name = n.join(' ')
+    }
+
+    name = name[0].toUpperCase() + name.substr(1);
+
+    return name;
+}
 </script>
 
 <template>
@@ -37,8 +52,8 @@ function goToPokemonPage(pname) {
             <img :src="image_url">
         </div>
         <div class="name">
-            <h1 v-if="!compact">{{ formatter(name) }}</h1>
-            <p v-else>{{ formatter(name) }}</p>
+            <h1 v-if="!compact">{{ formattedName() }}</h1>
+            <p v-else>{{ formattedName() }}</p>
 
             <p v-if="!compact">#{{ id }}</p>
         </div>

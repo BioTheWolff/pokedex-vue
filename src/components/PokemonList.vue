@@ -21,8 +21,8 @@ const pokedex = new Pokedex.Pokedex({
 
 
 let pokemons = ref([]);
-let pokemons_list = await pokedex.getPokemonSpeciesList();
-pokemons.value = await pokemons_list.results;
+let pokemons_list = await pokedex.getPokemonsList();
+pokemons.value = pokemons_list.results.filter(e => getPokemonId(e.url) < 906);
 
 function getFilteredList() {
     if (!props.isSearch) {
@@ -55,6 +55,11 @@ function getTileKey(pokemon, index) {
     }
 }
 
+function getPokemonId(url) {
+    return Number(url.match(/([0-9]+)/g)[1])
+}
+
+
 // check if page number is above the amount of data we have
 if (props.page*props.nbPerPage >= getFilteredList().length) {
     emits('outOfBounds')
@@ -72,6 +77,7 @@ if (props.page*props.nbPerPage >= getFilteredList().length) {
             :key="getTileKey(pokemon, index)"
             :name="pokemon.name"
             :url="pokemon.url"
+            :get-pokemon-id="getPokemonId"
         ></PokemonTile>
     </div>
 

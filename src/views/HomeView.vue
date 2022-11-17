@@ -31,6 +31,10 @@ watch(() => route.fullPath, () => {
   search_term.value = route.params.search ?? "";
 
   setPageValue();
+
+  if (route.name == 'list' && route.params.page && Number(route.params.page) === 1) {
+    page.value = 0;
+  }
 })
 
 
@@ -39,8 +43,6 @@ function setPageValue() {
   // use the page number from the route if it exists
   if (route.params.page && Number(route.params.page) >= 1) {
     page.value = Number(route.params.page)-1;
-  } else {
-    page.value = 0;
   }
 
   // this is the "search" route case

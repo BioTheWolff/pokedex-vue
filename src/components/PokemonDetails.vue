@@ -33,7 +33,7 @@ async function loadPokemon() {
         p.value = await pokedex.getPokemon(props.name);
 
         // using the resource function to fix getPokemonSpecies(name) being equivalent to getPokemonSpecies()
-        s.value = await pokedex.resource(`/api/v2/pokemon-species/${props.name}`);
+        s.value = await pokedex.resource(p.value.species.url);
     } catch (e) {
         emitNotFound(e);
     }
