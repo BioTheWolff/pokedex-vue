@@ -64,10 +64,10 @@ async function loadSpecies() {
                 abilities: cur.abilities,
                 stats: cur.stats,
                 types: cur.types,
-                image_url: cur.sprites.other['official-artwork'].front_default
+                image_url: cur.sprites.other['official-artwork'].front_default 
+                    ?? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
             }}
         ), {});
-        console.log(varieties.value)
         
         // now find the default variety for this species and select it
         p.value = varieties.value[s.value.varieties.filter(e => e.is_default)[0].pokemon.name];
