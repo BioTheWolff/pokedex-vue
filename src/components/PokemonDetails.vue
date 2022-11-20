@@ -239,6 +239,8 @@ function getMostImportantType() {
             flex-direction: column
             width: fit-content
             gap: 1em
+            max-height: 45vh
+            overflow-y: auto
 
         .types
             margin-top: 1em

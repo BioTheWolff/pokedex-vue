@@ -68,8 +68,8 @@ if (props.page*props.nbPerPage >= getFilteredList().length) {
 
 <template>
     <div class="pagination">
-          <button @click="this.$emit('chgPage', -1)" v-visible="page > 0">Previous page</button>
-          <button @click="this.$emit('chgPage', 1)" v-visible="getSlicedList().length === $props.nbPerPage">Next page</button>
+          <button @click="$emit('chgPage', -1)" v-visible="page > 0">Previous page</button>
+          <button @click="$emit('chgPage', 1)" v-visible="getSlicedList().length === $props.nbPerPage">Next page</button>
       </div>
     <div class="pokemon-list">
         <PokemonTile 
