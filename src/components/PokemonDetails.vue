@@ -192,7 +192,7 @@ function getMostImportantType() {
                     </section>
                 </div>
                 <div class="info">
-                    <section class="evolution-chain">
+                    <section class="evolution-chain" v-if="s.evolution_chain">
                         <h2>Evolution tree</h2>
                         <Suspense>
                             <PokemonEvolutionChain
